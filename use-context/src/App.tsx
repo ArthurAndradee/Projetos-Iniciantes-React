@@ -1,26 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
 
-function App() {
+import { DashboardContext } from './context';
+import Dashboard from './Dashboard';
+
+export interface User {
+  isSubscribed: boolean;
+  name: string;
+}
+
+interface DemoProps {}
+
+export default function Demo({}: DemoProps) {
+  const [user] = useState<User>({
+    isSubscribed: true,
+    name: 'You',
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <DashboardContext.Provider value={user}>
+        <Dashboard />
+      </DashboardContext.Provider>
     </div>
   );
 }
-
-export default App;
