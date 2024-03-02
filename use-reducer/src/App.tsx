@@ -1,24 +1,55 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
+import { useReducer } from 'react';
+
+interface State {
+  count: number;
+  error: string | null;
+}
+
+interface Action {
+  type: 'increment' | 'decrement';
+}
+
+function reducer(state: State, action: Action) {
+  const {type} = action;
+
+  switch (type) {
+    case 'increment': {
+      const newCount = state.count + 1;
+      const hasError = newCount > 5;
+
+      return {...state, 
+        count: hasError ? state.count : newCount,
+        error: hasError ? "Maximum reached" : null}
+    }
+    case 'decrement': {
+      const newCount = state.count - 1;
+      const hasError = newCount < 0;
+
+      return {...state, 
+        count: hasError ? state.count : newCount,
+        error: hasError ? "Minimum reached" : null}
+    }
+    default:
+      return state;
+  }
+}
+
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+  const [state, dispatch] = useReducer(reducer, {
+    count:0,
+    error: null,
+  });
+
+  return ( 
+    <div className='tutorial'>
+      <div>Count: {state.count}</div>
+      {state.error && <div className='mb-2 text-red-500'>{state.error}</div>}
+      <button className='mb-2' onClick={() => dispatch({ type: 'increment' })}>
+        Increment
+      </button>
+      <button onClick={() => dispatch({ type: 'decrement' })}>Decrement</button>
     </div>
   );
 }

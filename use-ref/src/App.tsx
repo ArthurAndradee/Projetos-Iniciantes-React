@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useRef, useState } from "react";
 
-function App() {
+interface DemoProps {}
+
+export default function Demo({}: DemoProps) {
+  const [count, setCount] = useState(0);
+  const countRef = useRef(0);
+
+  const handleIncrement = () => {
+    setCount(count + 1); //triggers re-render, therefore passing current countRef value to component
+    countRef.current++; //would not pass current value if not for useState, because useRef does not re-render components.
+
+    console.log("State:", count);
+    console.log("Ref:", countRef.current);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="tutorial">
+      Count: {count}
+      <button onClick={handleIncrement}>Increment</button>
     </div>
   );
 }
 
-export default App;
+export function Demo2({}: DemoProps) {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  return (
+    <div className="tutorial">
+      <input ref={inputRef} type="text" placeholder="Type something..." />
+    </div>
+  );
+}
